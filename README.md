@@ -2,11 +2,13 @@
 
 Разнообразные утилиты для облегчения жизни
 
-[efiboot.sh ](##efiboot.sh)
+[efiboot.sh ](#efiboot.sh)
 
-[share-inet.sh](##share-inet.sh)
+[share-inet.sh](#share-inet.sh)
 
-[clearcache.sh](##clearcache.sh)
+[clearcache.sh](#clearcache.sh)
+
+[port-forwarding.sh](#port-forwarding.sh)
 
 ## efiboot.sh
  Просто выводит строчку efibootmgr <и всякие аргументы заданные в
@@ -20,3 +22,6 @@
  Очищает кэш оперативной памяти записывая `3` в
  `/proc/sys/vm/drop_caches` и чистит содержимое свап разела путем его
  отключения/подключения.
+
+## port-forwarding.sh
+ Простой скрипт перенаправления портов
