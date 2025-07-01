@@ -10,6 +10,8 @@
 
 [port-forwarding.sh](#port-forwarding.sh)
 
+[two-monitors.sh](#two-monitors.sh)
+
 ## efiboot.sh
  Просто выводит строчку efibootmgr <и всякие аргументы заданные в
  efiboot.sh>, чтобы избежать опечаток.
@@ -25,3 +27,6 @@
 
 ## port-forwarding.sh
  Простой скрипт перенаправления портов
+
+## two-monitors.sh
+ Скрипт включающий второй монитор по HDMI
