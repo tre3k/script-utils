@@ -4,24 +4,40 @@
 # в режиме EFI Stub без использования загрузчика
 # Если передан параметр --exec то строчка выполнится
 
-if [[ -z $SUFFIX ]]; then SUFFIX='-workpc'; fi
+function findUUID() {
+    lsblk -o UUID,MOUNTPOINT | awk '{print $1,$2}' | while IFS= read -r line; do
+	arr=()
+	for col in $line; do
+	    arr+=(${col})
+	done
+	if [[ "${arr[1]}" == "$1" ]]
+	then
+	    echo "${arr[0]}"
+	    return 0
+	fi
+    done
+
+    return -1
+}
+
+if [[ -z $SUFFIX ]]; then SUFFIX='-tre3k'; fi
 if [[ -z $LINUX_NAME ]]; then LINUX_NAME="ArchLinux"; fi
 LABEL='"'${LINUX_NAME}${SUFFIX}' EFI stub"'
 
-KERNEL_PATH='\\arch\\vmlinuz-linux'${SUFFIX}
-INITRDS='\arch\intel-ucode.img \arch\initramfs-linux'${SUFFIX}'.img'
+KERNEL_PATH='\\EFI\\arch\\vmlinuz-linux'${SUFFIX}
+INITRDS='\EFI\arch\intel-ucode.img \EFI\arch\initramfs-linux'${SUFFIX}'.img'
 
-if [[ -z ${ESP_DISK} ]]; then ESP_DISK='/dev/sda'; fi
+if [[ -z ${ESP_DISK} ]]; then ESP_DISK='/dev/sdb'; fi
 if [[ -z ${ESP_PART} ]]; then ESP_PART='1'; fi
-if [[ -z ${ROOT_UUID} ]]; then ROOT_UUID='f4e983c2-595f-400e-9aee-56981fdc565e'; fi
-if [[ -z ${SWAP_UUID} ]]; then SWAP_UUID='5beb6a95-a533-4234-ad57-2e80e4020820'; fi
+if [[ -z ${ROOT_UUID} ]]; then ROOT_UUID=$(findUUID "/"); fi
+if [[ -z ${SWAP_UUID} ]]; then SWAP_UUID=$(findUUID "[SWAP]"); fi
 
 for initrd in ${INITRDS}
 do
     INITRD=${INITRD}' initrd='${initrd}
 done
 
-KERN_CMDLINE=${INITRD}' root=UUID='${ROOT_UUID}' rw resume=UUID='${SWAP_UUID}' consoleblank=600 splash quiet'
+KERN_CMDLINE=${INITRD}' root=UUID='${ROOT_UUID}' rw resume=UUID='${SWAP_UUID}' consoleblank=600 splash quiet pcie_aspm=off pcie_port_pm=off'
 
 echo "label: "${LABEL}
 echo "loader: "${KERNEL_PATH}
