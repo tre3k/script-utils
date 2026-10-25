@@ -16,16 +16,20 @@ function findUUID() {
 	    return 0
 	fi
     done
-
     return -1
 }
 
-if [[ -z $SUFFIX ]]; then SUFFIX='-tre3k'; fi
+
+IFS='-' read -ra kernel_release <<< `uname -r`
+if [[ -z $SUFFIX ]]; then SUFFIX=-${kernel_release[-1]}; fi
 if [[ -z $LINUX_NAME ]]; then LINUX_NAME="ArchLinux"; fi
 LABEL='"'${LINUX_NAME}${SUFFIX}' EFI stub"'
 
 KERNEL_PATH='\\EFI\\arch\\vmlinuz-linux'${SUFFIX}
 INITRDS='\EFI\arch\intel-ucode.img \EFI\arch\initramfs-linux'${SUFFIX}'.img'
+
+# Нужно сделать тест существования файлов
+#echo ${KERNEL_PATH} | sed 's/\\/\//g'
 
 if [[ -z ${ESP_DISK} ]]; then ESP_DISK='/dev/sdb'; fi
 if [[ -z ${ESP_PART} ]]; then ESP_PART='1'; fi
