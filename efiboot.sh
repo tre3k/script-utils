@@ -5,7 +5,7 @@
 # Если передан параметр --exec то строчка выполнится
 
 function findUUID() {
-    lsblk -o UUID,MOUNTPOINT | awk '{print $1,$2}' | while IFS= read -r line; do
+    lsblk -o UUID,MOUNTPOINT | while IFS= read -r line; do
 	arr=()
 	for col in $line; do
 	    arr+=(${col})
